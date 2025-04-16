@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: arcp-agent
+  labels:
+    app: arcp
+spec:
+  selector:
+    matchLabels:
+      app: arcp
+  template:
+    metadata:
+      labels:
+        app: arcp
+    spec:
+      containers:
+        - name: arcp-agent
+          image: your-dockerhub-user/arcp:latest
+          ports:
+            - containerPort: 50051
+          env:
+            - name: POD_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: ARCP_PEER
+              value: "arcp-service.default.svc.cluster.local:50051"
+

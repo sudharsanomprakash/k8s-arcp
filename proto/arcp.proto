@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package arcp;
+
+service ARCP {
+  rpc Exchange(ResourceStatus) returns (ResourceStatus);
+}
+
+message ResourceStatus {
+  string podID = 1;
+  string namespace = 2;
+  float cpuUsage = 3;
+  uint32 memUsage = 4;
+  uint64 timestamp = 5;
+  float requestedCPU = 6;
+  uint32 requestedMem = 7;
+  string suggestedAction = 8;
+}

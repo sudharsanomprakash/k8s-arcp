@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arcp-demo
+  labels:
+    app: arcp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: arcp
+  template:
+    metadata:
+      labels:
+        app: arcp
+    spec:
+      containers:
+        - name: arcp-agent
+          image: your-dockerhub-user/arcp:latest
+          ports:
+            - containerPort: 50051
+          env:
+            - name: POD_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: ARCP_PEER
+              value: "arcp-demo-0.arcp-headless.default.svc.cluster.local:50051"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: arcp-headless
+spec:
+  clusterIP: None
+  selector:
+    app: arcp
+  ports:
+    - port: 50051
+      targetPort: 50051
+

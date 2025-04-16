@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: arcp-service
+  labels:
+    app: arcp
+spec:
+  selector:
+    app: arcp
+  ports:
+    - protocol: TCP
+      port: 50051
+      targetPort: 50051
